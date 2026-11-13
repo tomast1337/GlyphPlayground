@@ -4,7 +4,10 @@ import {Compartment, Prec} from "@codemirror/state";
 import {oneDark} from "@codemirror/theme-one-dark";
 import {keymap} from "@codemirror/view";
 import {basicSetup, EditorView} from "codemirror";
+import {loadLocale, t} from "./i18n";
 import {decode, encode} from "./share";
+
+await loadLocale();
 
 type Lang = "ts" | "js";
 
@@ -47,6 +50,7 @@ const editor = new EditorView({
         keymap.of([indentWithTab]),
         Prec.highest(keymap.of([{key: "Mod-Enter", run: () => (run(), true)}])),
         matchMedia("(prefers-color-scheme: dark)").matches ? oneDark : [],
+        EditorView.contentAttributes.of({"aria-label": t("editor")}),
         EditorView.updateListener.of(u => {
             if (u.docChanged) status.textContent = "";
         }),
@@ -89,9 +93,9 @@ async function share() {
     history.replaceState(null, "", `${PREFIX[lang]}${await encode(source())}`);
     try {
         await navigator.clipboard.writeText(location.href);
-        status.textContent = "Link copied";
+        status.textContent = t("share.copied");
     } catch {
-        status.textContent = "Link is in the address bar";
+        status.textContent = t("share.inAddressBar");
     }
 }
 
@@ -116,7 +120,7 @@ if (shared) {
         setSource(await decode(location.hash.slice(PREFIX[shared].length)));
         setLang(shared);
     } catch {
-        errors.textContent = "This link's program is damaged; showing the default one.\n";
+        errors.textContent = `${t("link.damaged")}\n`;
     }
 }
 run();
