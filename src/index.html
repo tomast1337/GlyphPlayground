@@ -9,23 +9,23 @@
 </head>
 <body>
     <header>
-        <h1>GlyphEngine Playground</h1>
-        <select id="lang" aria-label="Language">
+        <h1 data-i18n="title">GlyphEngine Playground</h1>
+        <select id="lang" data-i18n-aria-label="language">
             <option value="ts">TypeScript</option>
             <option value="js">JavaScript</option>
         </select>
-        <button id="run" type="button" title="Ctrl+Enter">Run</button>
-        <button id="share" type="button">Copy link</button>
+        <button id="run" type="button" data-i18n="run" data-i18n-title="run.title"></button>
+        <button id="share" type="button" data-i18n="share"></button>
         <span id="status" role="status"></span>
     </header>
     <main>
         <div id="code" aria-describedby="hint"></div>
         <!-- No allow-same-origin: shared programs can't reach this page, its storage or cookies -->
-        <iframe id="output" sandbox="allow-scripts" title="Program output"></iframe>
+        <iframe id="output" sandbox="allow-scripts" data-i18n-title="output"></iframe>
     </main>
     <footer>
         <pre id="errors" role="alert"></pre>
-        <p id="hint">Ctrl+Enter runs. Tab indents; press Esc first to move focus out of the editor. TypeScript types are removed, not checked.</p>
+        <p id="hint" data-i18n="hint"></p>
     </footer>
     <script type="module" src="./playground.ts"></script>
 </body>
