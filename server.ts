@@ -45,8 +45,9 @@ async function route(req: Request) {
     // /play to /play/: the page's relative links only resolve with the slash
     if (info.isDirectory()) return new Response(null, {status: 301, headers: {Location: `${pathname}/${search}`}});
 
-    // Bun hashes the bundle's chunks (chunk-<hash>.js/css), so they can be cached forever; the rest keeps its name.
-    const cache = /^\/chunk-[\w-]+\.\w+$/.test(pathname) ? "public, max-age=31536000, immutable" : "no-cache";
+    // Every script and style has a hashed name (chunk-<hash>.js, engine-<hash>.js...), so it can be cached for good.
+    // Pages keep their names: always revalidated.
+    const cache = /-[a-z0-9]{8,}\.(js|css)$/.test(pathname) ? "public, max-age=31536000, immutable" : "no-cache";
 
     // HTTP dates have whole seconds: compare at that precision so an unchanged file gives 304
     const modified = Math.floor(info.mtimeMs / 1000) * 1000;

@@ -36,10 +36,14 @@ test.skipIf(!existsSync(`${import.meta.dir}/dist/play/index.html`))("folders, ca
 
     const page = await get("/");
     expect(page.headers.get("Cache-Control")).toBe("no-cache");
-    expect((await get("/engine.js")).headers.get("Cache-Control")).toBe("no-cache"); // not hashed
+    expect((await get("/runner.html")).headers.get("Cache-Control")).toBe("no-cache");
 
     const chunk = (await page.text()).match(/\/(chunk-[\w-]+\.js)/)![1];
     expect((await get(`/${chunk}`)).headers.get("Cache-Control")).toContain("immutable");
+    for (const [, name] of (await (await get("/runner.html")).text()).matchAll(/\.\/((engine|runner)-\w+\.js)/g)) {
+        expect((await get(`/${name}`)).status).toBe(200);
+        expect((await get(`/${name}`)).headers.get("Cache-Control")).toContain("immutable");
+    }
 
     const at = (since: string) => get("/", {headers: {"If-Modified-Since": since}});
     const modified = page.headers.get("Last-Modified")!;

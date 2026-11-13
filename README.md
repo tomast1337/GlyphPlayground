@@ -18,7 +18,7 @@ bun run check   # types
 ## How it works
 
 - Programs are TypeScript or JavaScript (the selector next to Run), edited with CodeMirror. TypeScript goes through [Sucrase](https://github.com/alangpierce/sucrase), which only removes the types (no type checking); it loads on first use.
-- A program is a module exporting `main`, `pre`, `post`, `settings`… (see [Writing programs](https://github.com/tomast1337/GlyphEngine/blob/main/docs/programs.md)). It imports the engine as `@glyph-engine/web` or `@glyph-engine/core`; an import map points both at `dist/engine.js`.
+- A program is a module exporting `main`, `pre`, `post`, `settings`… (see [Writing programs](https://github.com/tomast1337/GlyphEngine/blob/main/docs/programs.md)). It imports the engine as `@glyph-engine/web` or `@glyph-engine/core`; an import map in `runner.html` points both at the engine's file.
 - Each run reloads `runner.html` in an iframe with `sandbox="allow-scripts"` and no `allow-same-origin`, so a shared program can't read the playground's page, storage or cookies. Code and errors cross with `postMessage`.
 - **Copy link** puts the program in the URL hash (`#t=` TypeScript, `#c=` JavaScript), compressed with deflate-raw and encoded as base64url. The hash never reaches the server, so there is no backend.
 
@@ -44,4 +44,4 @@ Interface text lives in `src/i18n/`. `en.ts` has every key; to add a language, c
 
 Railway runs the `Dockerfile` (`bun run build`, then `bun server.ts`), with `/healthz` as its health check (`railway.json`). Pushing to `main` deploys, through `.github/workflows/railway.yml`; it needs the `RAILWAY_TOKEN` secret, a Railway project token.
 
-`server.ts` sends the security headers. Pages get a strict Content-Security-Policy; `runner.html` gets `sandbox allow-scripts`, so programs stay sandboxed even if it's framed without the attribute. Every response allows any origin, because the sandboxed runner loads `engine.js` cross-origin. Bun's hashed `chunk-*` files are cached for a year, everything else revalidates.
+`server.ts` sends the security headers. Pages get a strict Content-Security-Policy; `runner.html` gets `sandbox allow-scripts`, so programs stay sandboxed even if it's framed without the attribute. Every response allows any origin, because the sandboxed runner loads the engine cross-origin. Scripts and styles have hashed names (Bun's `chunk-*`, and `engine-*` and `runner-*` named by `tools/build.ts`) and are cached for a year; pages revalidate.
