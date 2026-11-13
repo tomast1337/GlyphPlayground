@@ -1,0 +1,18 @@
+{
+    "name": "glyph-playground",
+    "type": "module",
+    "private": true,
+    "scripts": {
+        "build": "bun tools/build.ts",
+        "start": "bun server.ts",
+        "dev": "bun tools/build.ts --serve",
+        "check": "tsc --noEmit"
+    },
+    "dependencies": {
+        "@glyph-engine/web": "0.2.0"
+    },
+    "devDependencies": {
+        "@types/bun": "latest",
+        "typescript": "^5"
+    }
+}

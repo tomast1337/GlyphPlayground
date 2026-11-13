@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <!-- Programs import the engine by package name, as in the docs -->
+    <script type="importmap">
+        {"imports": {"@glyph-engine/web": "./engine.js", "@glyph-engine/core": "./engine.js"}}
+    </script>
+    <style>
+        html, body { margin: 0; height: 100%; overflow: hidden; background: #000; color: #fff; font: 14px/1.2 monospace; }
+        /* run() sizes the grid from its element: fill the frame */
+        pre, canvas { display: block; margin: 0; width: 100vw; height: 100vh; font: inherit; }
+    </style>
+</head>
+<body>
+    <script type="module" src="./runner.js"></script>
+</body>
+</html>
