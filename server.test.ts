@@ -18,7 +18,6 @@ test("security headers on every response; the runner may only be framed by the s
         expect(res.headers.get("Strict-Transport-Security")).toContain("max-age=");
         expect(res.headers.get("X-Content-Type-Options")).toBe("nosniff");
     }
-    expect((await get("/runner.html")).headers.get("Content-Security-Policy")).toBe("sandbox allow-scripts; frame-ancestors 'self'");
 });
 
 test("only GET and HEAD", async () => {
@@ -33,6 +32,15 @@ test.skipIf(!existsSync(`${import.meta.dir}/dist/play/index.html`))("folders, ca
     const play = await get("/play?lang=pt");
     expect(play.status).toBe(301);
     expect(play.headers.get("Location")).toBe("/play/?lang=pt");
+
+    // Redirects stay on this site, whatever the path's spelling
+    for (const path of ["//example.com/..%2Flearn", "//learn", "/%2Flearn"]) {
+        expect((await get(path)).headers.get("Location")).toBe("/learn/");
+    }
+    // The runner is sandboxed however its URL is spelled
+    for (const path of ["/runner.html", "//runner.html", "/%72unner.html"]) {
+        expect((await get(path)).headers.get("Content-Security-Policy")).toBe("sandbox allow-scripts; frame-ancestors 'self'");
+    }
 
     const page = await get("/");
     expect(page.headers.get("Cache-Control")).toBe("no-cache");

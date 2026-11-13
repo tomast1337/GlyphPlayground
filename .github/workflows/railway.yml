@@ -5,12 +5,19 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# Deploying needs no write access to the repository
+permissions:
+  contents: read
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - run: npm install --global @railway/cli
+      # Pinned: this job holds RAILWAY_TOKEN, so it runs only code we chose
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - run: npm install --global @railway/cli@5.74.0
       - run: railway up --service glyph-engine --ci
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}

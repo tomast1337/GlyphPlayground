@@ -1,6 +1,6 @@
 // Serves dist/, locally (bun run dev) and in production (Railway).
 import {stat} from "node:fs/promises";
-import {resolve, sep} from "node:path";
+import {join, relative, resolve, sep} from "node:path";
 
 const root = resolve(import.meta.dir, "dist");
 
@@ -14,6 +14,9 @@ const HEADERS = {
     "Strict-Transport-Security": "max-age=63072000; includeSubDomains",
     "X-Content-Type-Options": "nosniff",
     "Referrer-Policy": "strict-origin-when-cross-origin",
+    "Cross-Origin-Opener-Policy": "same-origin",
+    // The runner's sandbox grants none of these either
+    "Permissions-Policy": "camera=(), microphone=(), geolocation=(), usb=(), payment=()",
     // The runner is sandboxed (origin "null"), so its loads of engine.js are cross-origin
     "Access-Control-Allow-Origin": "*",
 };
@@ -21,8 +24,8 @@ const HEADERS = {
 export async function handle(req: Request) {
     const res = await route(req);
     for (const [name, value] of Object.entries(HEADERS)) res.headers.set(name, value);
-    const {pathname} = new URL(req.url);
-    res.headers.set("Content-Security-Policy", pathname === "/runner.html" ? RUNNER_CSP : PAGE_CSP);
+    // route() sets the runner's own; everything else, errors included, gets the pages' one
+    if (!res.headers.has("Content-Security-Policy")) res.headers.set("Content-Security-Policy", PAGE_CSP);
     return res;
 }
 
@@ -42,8 +45,10 @@ async function route(req: Request) {
 
     const info = await stat(path).catch(() => null);
     if (!info) return new Response("Not found", {status: 404});
-    // /play to /play/: the page's relative links only resolve with the slash
-    if (info.isDirectory()) return new Response(null, {status: 301, headers: {Location: `${pathname}/${search}`}});
+    // /play to /play/: the page's relative links only resolve with the slash.
+    // Built from the resolved path, never the raw one: "//evil.example/..%2Flearn" must not redirect off-site.
+    const canonical = `/${relative(root, path).split(sep).join("/")}`;
+    if (info.isDirectory()) return new Response(null, {status: 301, headers: {Location: `${canonical}/${search}`}});
 
     // Every script and style has a hashed name (chunk-<hash>.js, engine-<hash>.js...), so it can be cached for good.
     // Pages keep their names: always revalidated.
@@ -51,7 +56,9 @@ async function route(req: Request) {
 
     // HTTP dates have whole seconds: compare at that precision so an unchanged file gives 304
     const modified = Math.floor(info.mtimeMs / 1000) * 1000;
-    const headers = {"Cache-Control": cache, "Last-Modified": new Date(modified).toUTCString()};
+    const headers: Record<string, string> = {"Cache-Control": cache, "Last-Modified": new Date(modified).toUTCString()};
+    // Chosen by the file, not the URL's spelling ("/%72unner.html", "//runner.html")
+    if (path === join(root, "runner.html")) headers["Content-Security-Policy"] = RUNNER_CSP;
     if (Date.parse(req.headers.get("If-Modified-Since") ?? "") >= modified) return new Response(null, {status: 304, headers});
 
     return new Response(Bun.file(path), {headers});
