@@ -7,7 +7,7 @@ export type Messages = Partial<Record<Key, string>>;
 
 // Loaded on demand, so each visitor downloads only their language
 const LOCALES: Record<string, () => Promise<{default: Messages}>> = {
-    // pt: () => import("./pt"),
+    pt: () => import("./pt"),
 };
 
 let messages: Messages = {};
