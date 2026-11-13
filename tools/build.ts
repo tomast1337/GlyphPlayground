@@ -5,7 +5,7 @@ const outdir = "dist";
 await rm(outdir, {recursive: true, force: true});
 
 const builds = await Promise.all([
-    Bun.build({entrypoints: ["./src/index.html"], outdir, minify: true}),
+    Bun.build({entrypoints: ["./src/index.html"], outdir, minify: true, splitting: true}), // splitting: Sucrase loads on demand
     // One unhashed file: the runner's import map and user programs load the engine by this name
     Bun.build({entrypoints: [Bun.resolveSync("@glyph-engine/web", import.meta.dir)], outdir, naming: "engine.js", minify: true, target: "browser"}),
 ]);

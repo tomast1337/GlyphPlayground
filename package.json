@@ -9,7 +9,14 @@
         "check": "tsc --noEmit"
     },
     "dependencies": {
-        "@glyph-engine/web": "0.2.0"
+        "@codemirror/commands": "^6.11.1",
+        "@codemirror/lang-javascript": "^6.2.5",
+        "@codemirror/state": "^6.7.6",
+        "@codemirror/theme-one-dark": "^6.1.3",
+        "@codemirror/view": "^6.43.15",
+        "@glyph-engine/web": "0.2.0",
+        "codemirror": "^6.0.2",
+        "sucrase": "^3.35.1"
     },
     "devDependencies": {
         "@types/bun": "latest",
