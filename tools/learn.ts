@@ -27,9 +27,9 @@ function page(title: string, body: string, chapters: Chapter[], current?: string
 <body>
     <header class="site">
         <a class="brand" href="../">GlyphEngine</a>
-        <a href="./" aria-current="page" data-i18n="nav.learn">Learn</a>
-        <a href="../play/" data-i18n="nav.play">Playground</a>
-        <a href="https://github.com/tomast1337/GlyphEngine">GitHub</a>
+        <a class="icon icon-book" href="./" aria-current="page" data-i18n="nav.learn">Learn</a>
+        <a class="icon icon-play" href="../play/" data-i18n="nav.play">Playground</a>
+        <a class="icon icon-github" href="https://github.com/tomast1337/GlyphEngine">GitHub</a>
     </header>
     <div class="learn">
         <nav class="chapters" aria-labelledby="chapters-title">

@@ -28,7 +28,7 @@ export function highlight(code: string, lang: keyof typeof PARSERS = "ts") {
 
 // root: the path from the page to the site root ("./", "../")
 async function playLink(code: string, typescript: boolean, root: string) {
-    return `<a class="play" href="${root}play/#${typescript ? "t" : "c"}=${await encode(code)}" data-i18n="example.open">Run in playground</a>`;
+    return `<a class="play icon icon-play" href="${root}play/#${typescript ? "t" : "c"}=${await encode(code)}" data-i18n="example.open">Run in playground</a>`;
 }
 
 async function block(lang: string, code: string, root: string) {
