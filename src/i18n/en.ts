@@ -26,7 +26,7 @@ export default {
     "learn.prev": "Previous",
     "learn.next": "Next",
     "example.output": "Example output",
-    "example.open": "Open in playground",
+    "example.open": "Run in playground",
     "language": "Language",
     "run": "Run",
     "run.title": "Ctrl+Enter",

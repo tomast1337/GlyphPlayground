@@ -3,9 +3,9 @@ import en from "./en";
 import {pickLocale} from "./index";
 
 test("every key the pages use exists in English", async () => {
-    // The pages, and the guide's page template
+    // The pages, and the templates that tools/ add to them
     const root = `${import.meta.dir}/../..`;
-    const files = [...new Bun.Glob("src/**/*.html").scanSync({cwd: root}), "tools/learn.ts"];
+    const files = [...new Bun.Glob("src/**/*.html").scanSync({cwd: root}), "tools/learn.ts", "tools/code.ts"];
     const sources = await Promise.all(files.map(f => Bun.file(`${root}/${f}`).text()));
     const keys = sources.flatMap(text => [...text.matchAll(/data-i18n(?:-[\w-]+)?="([^"$]+)"/g)].map(m => m[1]!));
     expect(keys.length).toBeGreaterThan(0);

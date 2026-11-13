@@ -27,7 +27,7 @@ export default {
     "learn.prev": "Anterior",
     "learn.next": "Próximo",
     "example.output": "Saída do exemplo",
-    "example.open": "Abrir no playground",
+    "example.open": "Executar no playground",
     "language": "Linguagem",
     "run": "Executar",
     "share": "Copiar link",

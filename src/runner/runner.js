@@ -10,7 +10,9 @@ addEventListener('message', async e => {
     if (e.source !== parent) return;
     const url = URL.createObjectURL(new Blob([e.data.code], { type: 'text/javascript' }));
     try {
-        await run(await import(url));
+        const program = await import(url);
+        // A snippet like run({ main() {} }) has already started itself
+        if (program.main || program.pre || program.post || program.wgsl) await run(program);
     } catch (err) {
         report(err);
     }

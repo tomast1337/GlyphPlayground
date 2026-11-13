@@ -24,9 +24,17 @@ bun run check   # types
 
 ## Writing the guide
 
-Each chapter is a Markdown file in `learn/`, named `NN-slug.md`: `NN` orders the chapters and `slug` becomes the page name (`learn/slug.html`). The first `# heading` is the chapter's title. The build (`tools/learn.ts`) turns them into pages in `src/learn/`, which is generated and not committed.
+Each chapter is a Markdown file in `learn/`, named `NN-slug.md`: `NN` orders the chapters and `slug` becomes the page name (`learn/slug.html`). The first `# heading` is the chapter's title. The build (`tools/learn.ts`) turns them into pages.
 
-A code block marked `glyph` is a live example, written in TypeScript like the playground: the page shows the highlighted code, runs it below in the sandboxed runner, and links to it in the playground. `ts` and `js` blocks are highlighted only. A syntax error in an example fails the build, naming the file.
+## Code blocks
+
+The build renders code blocks in every page, the guide's and the HTML ones alike (`tools/code.ts`); in HTML, write them as `<pre><code class="language-ts">…</code></pre>`.
+
+- `glyph`: a live example, in TypeScript like the playground. The page shows the highlighted code, runs it below in the sandboxed runner, and links to it in the playground. A syntax error fails the build.
+- `ts`, `js`: highlighted. A program (it imports from `@glyph-engine/`) also gets a "Run in playground" button.
+- `sh`: highlighted.
+
+The build works on a copy of `src/` in `.build/` (not committed), so the sources stay as written.
 
 ## Translations
 

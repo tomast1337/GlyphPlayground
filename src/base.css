@@ -57,7 +57,16 @@ code, pre { font-family: ui-monospace, monospace; }
 .site a:hover, .site a[aria-current="page"] { text-decoration: underline; }
 .site .brand { font-weight: 700; margin-right: auto; }
 
-/* Code highlighted at build time (@lezer/highlight classHighlighter) */
+/* Code blocks, rendered at build time by tools/code.ts */
+pre { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 12px 16px; overflow-x: auto; font-size: 14px; line-height: 1.5; }
+.code { position: relative; }
+.code .play { position: absolute; top: 8px; right: 8px; }
+.play { font-size: 13px; padding: 2px 10px; border: 1px solid var(--line); border-radius: 4px; background: var(--bg); color: var(--link); text-decoration: none; }
+.play:hover { border-color: var(--link); }
+.errors { color: var(--error); white-space: pre-wrap; border-color: var(--error); }
+.errors:empty { display: none; }
+pre.sh .tok-variableName { color: var(--tok-def); }
+pre.sh .tok-propertyName { color: var(--tok-number); }
 .tok-keyword, .tok-operatorKeyword, .tok-modifier { color: var(--tok-keyword); }
 .tok-string, .tok-string2 { color: var(--tok-string); }
 .tok-number, .tok-bool, .tok-atom { color: var(--tok-number); }

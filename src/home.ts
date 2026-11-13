@@ -1,4 +1,4 @@
-import {embed} from "./embed";
+import {embed, startExamples} from "./embed";
 import {loadLocale} from "./i18n";
 import {encode} from "./share";
 
@@ -20,6 +20,7 @@ export function main(coord, context, cursor, out) {
 `;
 
 await loadLocale();
+startExamples();
 
 const errors = document.querySelector<HTMLElement>("#banner-errors")!;
 embed(document.querySelector<HTMLIFrameElement>("#banner")!, "./runner.html", BANNER, message => errors.textContent += `${message}\n`);

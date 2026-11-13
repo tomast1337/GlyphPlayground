@@ -28,7 +28,7 @@ export default {
     "learn.prev": "Ankstesnis",
     "learn.next": "Kitas",
     "example.output": "Pavyzdžio rezultatas",
-    "example.open": "Atidaryti bandymų aikštelėje",
+    "example.open": "Paleisti bandymų aikštelėje",
     "language": "Programavimo kalba",
     "run": "Paleisti",
     "share": "Kopijuoti nuorodą",

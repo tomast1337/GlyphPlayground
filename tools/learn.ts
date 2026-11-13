@@ -1,47 +1,14 @@
-// Turns the guide's chapters (learn/NN-slug.md) into HTML pages in src/learn/ (generated, gitignored),
-// which the site build then bundles. NN orders the chapters; the first "# heading" is the title.
-// A ```glyph code block (TypeScript) becomes a live example: highlighted code, its output, and a playground link.
-import {typescriptLanguage} from "@codemirror/lang-javascript";
-import {classHighlighter, highlightCode} from "@lezer/highlight";
-import {mkdir, readdir, rm} from "node:fs/promises";
-import {transform} from "sucrase";
-import {encode} from "../src/share";
+// Turns the guide's chapters (learn/NN-slug.md) into HTML pages, which the site build then bundles.
+// NN orders the chapters; the first "# heading" is the title. Code blocks are left to tools/code.ts,
+// which the build runs on every page.
+import {mkdir, readdir} from "node:fs/promises";
+import {escape, unescape} from "./code";
 
 export type Chapter = {slug: string; title: string; html: string};
 
-const escape = (s: string) => s.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
-const unescape = (s: string) => s.replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&quot;", '"').replaceAll("&#39;", "'").replaceAll("&amp;", "&");
-const stripTags = (s: string) => unescape(s.replace(/<[^>]*>/g, ""));
-
-// Syntax highlighting at build time: classes only, coloured by base.css, no JavaScript in the page
-export function highlight(code: string) {
-    let html = "";
-    highlightCode(code, typescriptLanguage.parser.parse(code), classHighlighter,
-        (text, classes) => html += classes ? `<span class="${classes}">${escape(text)}</span>` : escape(text),
-        () => html += "\n");
-    return html;
-}
-
-async function example(code: string) {
-    const js = transform(code, {transforms: ["typescript"], disableESTransforms: true}).code;
-    return `<figure class="example" data-code="${escape(js)}">
-<pre><code>${highlight(code)}</code></pre>
-<iframe sandbox="allow-scripts" loading="lazy" data-i18n-title="example.output"></iframe>
-<figcaption><a href="../play/#t=${await encode(code)}" data-i18n="example.open">Open in playground</a></figcaption>
-<pre class="errors" role="alert"></pre>
-</figure>`;
-}
-
-export async function renderChapter(markdown: string) {
-    let html = Bun.markdown.html(markdown);
-    for (const [block, lang, body] of html.matchAll(/<pre><code class="language-(\w+)">([\s\S]*?)<\/code><\/pre>/g)) {
-        const code = unescape(body!).replace(/\n$/, "");
-        const replacement = lang === "glyph" ? await example(code)
-            : /^(ts|js|typescript|javascript)$/.test(lang!) ? `<pre><code>${highlight(code)}</code></pre>`
-            : block;
-        html = html.replace(block, () => replacement);
-    }
-    const title = stripTags(html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/)?.[1] ?? "");
+export function renderChapter(markdown: string) {
+    const html = Bun.markdown.html(markdown);
+    const title = unescape(html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/)?.[1]?.replace(/<[^>]*>/g, "") ?? "");
     if (!title) throw new Error("a chapter needs a # title");
     return {title, html};
 }
@@ -83,16 +50,15 @@ function pager(prev?: Chapter, next?: Chapter) {
     return `<nav class="pager">${link(prev, "prev", "learn.prev")}${link(next, "next", "learn.next")}</nav>`;
 }
 
-// Writes the pages and returns their paths, for Bun.build
-export async function buildLearn(source = "learn", out = "src/learn") {
-    await rm(out, {recursive: true, force: true});
+// Writes the pages into out and returns their paths, for Bun.build
+export async function buildLearn(out: string, source = "learn") {
     await mkdir(out, {recursive: true});
 
     const files = (await readdir(source)).filter(f => /^\d+-.+\.md$/.test(f)).sort();
     const chapters: Chapter[] = [];
     for (const file of files) {
         try {
-            chapters.push({slug: file.replace(/^\d+-|\.md$/g, ""), ...await renderChapter(await Bun.file(`${source}/${file}`).text())});
+            chapters.push({slug: file.replace(/^\d+-|\.md$/g, ""), ...renderChapter(await Bun.file(`${source}/${file}`).text())});
         } catch (e) {
             throw new Error(`${source}/${file}: ${e instanceof Error ? e.message : e}`);
         }
