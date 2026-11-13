@@ -1,40 +1,14 @@
-:root {
-    --bg: #fafafa;
-    --fg: #1a1a1a;
-    --muted: #666;
-    --panel: #fff;
-    --line: #ddd;
-    --error: #b00020;
-    color-scheme: light;
-}
-
-@media (prefers-color-scheme: dark) {
-    :root {
-        --bg: #111;
-        --fg: #e6e6e6;
-        --muted: #999;
-        --panel: #1a1a1a;
-        --line: #333;
-        --error: #ff6b6b;
-        color-scheme: dark;
-    }
-}
-
-* { box-sizing: border-box; }
-
 body {
     margin: 0;
     height: 100dvh;
     display: grid;
     grid-template-rows: auto 1fr auto;
-    background: var(--bg);
-    color: var(--fg);
-    font: 14px/1.4 system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
 }
 
-header, footer { padding: 8px 16px; }
-header { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; border-bottom: 1px solid var(--line); }
-h1 { font-size: 1rem; margin: 0 auto 0 0; }
+footer { padding: 8px 16px; }
+.site .tools { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 button, select { font: inherit; padding: 4px 12px; }
 #status, #hint { color: var(--muted); }
 

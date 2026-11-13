@@ -4,8 +4,8 @@ import {Compartment, Prec} from "@codemirror/state";
 import {oneDark} from "@codemirror/theme-one-dark";
 import {keymap} from "@codemirror/view";
 import {basicSetup, EditorView} from "codemirror";
-import {loadLocale, t} from "./i18n";
-import {decode, encode} from "./share";
+import {loadLocale, t} from "../i18n";
+import {decode, encode} from "../share";
 
 await loadLocale();
 
@@ -86,7 +86,7 @@ async function run() {
         errors.textContent = String(e); // a syntax error, with its line and column
         return;
     }
-    output.src = "runner.html"; // reloads even when unchanged
+    output.src = "../runner.html"; // reloads even when unchanged
 }
 
 async function share() {

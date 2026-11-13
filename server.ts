@@ -8,7 +8,7 @@ function handle(req: Request) {
     const {pathname} = new URL(req.url);
     let path: string;
     try {
-        path = resolve(root, `.${decodeURIComponent(pathname === "/" ? "/index.html" : pathname)}`);
+        path = resolve(root, `.${decodeURIComponent(pathname.endsWith("/") ? `${pathname}index.html` : pathname)}`);
     } catch {
         return new Response("Bad request", {status: 400});
     }

@@ -1,5 +1,5 @@
 // Translations. To add a language: copy en.ts to <code>.ts (e.g. pt.ts), translate, and list it in LOCALES.
-// HTML elements name their text with data-i18n="key", and attributes with data-i18n-<attribute>="key".
+// HTML elements (<title> too) name their text with data-i18n="key", and attributes with data-i18n-<attribute>="key".
 import en from "./en";
 
 export type Key = keyof typeof en;
@@ -30,7 +30,6 @@ export async function loadLocale() {
     const locale = pickLocale(forced ? [forced] : navigator.languages);
     if (locale !== "en") messages = (await LOCALES[locale]!()).default;
     document.documentElement.lang = locale;
-    document.title = t("title");
     for (const el of document.querySelectorAll<HTMLElement>("*")) {
         for (const {name, value} of [...el.attributes]) {
             if (name === "data-i18n") el.textContent = t(value as Key);

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title data-i18n="play.title">GlyphEngine Playground</title>
+    <meta name="description" content="Write and share GlyphEngine programs in the browser.">
+    <link rel="stylesheet" href="../base.css">
+    <link rel="stylesheet" href="./play.css">
+</head>
+<body>
+    <header class="site">
+        <a class="brand" href="../">GlyphEngine</a>
+        <a href="../learn/" data-i18n="nav.learn">Learn</a>
+        <a href="./" aria-current="page" data-i18n="nav.play">Playground</a>
+        <a href="https://github.com/tomast1337/GlyphEngine">GitHub</a>
+        <span class="tools">
+        <select id="lang" data-i18n-aria-label="language">
+            <option value="ts">TypeScript</option>
+            <option value="js">JavaScript</option>
+        </select>
+        <button id="run" type="button" data-i18n="run" data-i18n-title="run.title"></button>
+        <button id="share" type="button" data-i18n="share"></button>
+        <span id="status" role="status"></span>
+        </span>
+    </header>
+    <main>
+        <div id="code" aria-describedby="hint"></div>
+        <!-- No allow-same-origin: shared programs can't reach this page, its storage or cookies -->
+        <iframe id="output" sandbox="allow-scripts" data-i18n-title="output"></iframe>
+    </main>
+    <footer>
+        <pre id="errors" role="alert"></pre>
+        <p id="hint" data-i18n="hint"></p>
+    </footer>
+    <script type="module" src="./playground.ts"></script>
+</body>
+</html>

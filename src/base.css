@@ -1,0 +1,66 @@
+:root {
+    --bg: #fafafa;
+    --fg: #1a1a1a;
+    --muted: #666;
+    --panel: #fff;
+    --line: #ddd;
+    --error: #b00020;
+    --link: #0b57d0;
+    --tok-keyword: #7a1fa2;
+    --tok-string: #0a7d3c;
+    --tok-number: #b35900;
+    --tok-type: #0b6e8a;
+    --tok-def: #0b57d0;
+    color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #111;
+        --fg: #e6e6e6;
+        --muted: #999;
+        --panel: #1a1a1a;
+        --line: #333;
+        --error: #ff6b6b;
+        --link: #8ab4f8;
+        --tok-keyword: #c792ea;
+        --tok-string: #a5d6a7;
+        --tok-number: #f7b267;
+        --tok-type: #80cbc4;
+        --tok-def: #82aaff;
+        color-scheme: dark;
+    }
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font: 16px/1.6 system-ui, sans-serif;
+}
+
+a { color: var(--link); }
+code, pre { font-family: ui-monospace, monospace; }
+
+/* Site header, on every page */
+.site {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--line);
+}
+.site a { color: inherit; text-decoration: none; }
+.site a:hover, .site a[aria-current="page"] { text-decoration: underline; }
+.site .brand { font-weight: 700; margin-right: auto; }
+
+/* Code highlighted at build time (@lezer/highlight classHighlighter) */
+.tok-keyword, .tok-operatorKeyword, .tok-modifier { color: var(--tok-keyword); }
+.tok-string, .tok-string2 { color: var(--tok-string); }
+.tok-number, .tok-bool, .tok-atom { color: var(--tok-number); }
+.tok-comment { color: var(--muted); font-style: italic; }
+.tok-typeName, .tok-className, .tok-namespace { color: var(--tok-type); }
+.tok-variableName.tok-definition, .tok-propertyName.tok-definition { color: var(--tok-def); }

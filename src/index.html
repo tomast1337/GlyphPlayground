@@ -3,30 +3,72 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>GlyphEngine Playground</title>
-    <meta name="description" content="Write and share GlyphEngine programs in the browser.">
-    <link rel="stylesheet" href="./style.css">
+    <title data-i18n="home.title">GlyphEngine: shader-style ASCII art</title>
+    <meta name="description" content="Shader-style ASCII art for the web, the terminal and the desktop.">
+    <link rel="stylesheet" href="./base.css">
+    <link rel="stylesheet" href="./home.css">
 </head>
 <body>
-    <header>
-        <h1 data-i18n="title">GlyphEngine Playground</h1>
-        <select id="lang" data-i18n-aria-label="language">
-            <option value="ts">TypeScript</option>
-            <option value="js">JavaScript</option>
-        </select>
-        <button id="run" type="button" data-i18n="run" data-i18n-title="run.title"></button>
-        <button id="share" type="button" data-i18n="share"></button>
-        <span id="status" role="status"></span>
+    <header class="site">
+        <a class="brand" href="./" aria-current="page">GlyphEngine</a>
+        <a href="./learn/" data-i18n="nav.learn">Learn</a>
+        <a href="./play/" data-i18n="nav.play">Playground</a>
+        <a href="https://github.com/tomast1337/GlyphEngine">GitHub</a>
     </header>
     <main>
-        <div id="code" aria-describedby="hint"></div>
-        <!-- No allow-same-origin: shared programs can't reach this page, its storage or cookies -->
-        <iframe id="output" sandbox="allow-scripts" data-i18n-title="output"></iframe>
+        <section class="banner">
+            <iframe id="banner" sandbox="allow-scripts" data-i18n-title="home.banner"></iframe>
+            <a id="banner-edit" href="./play/" data-i18n="home.bannerEdit">Edit this in the playground</a>
+            <pre id="banner-errors" class="errors" role="alert"></pre>
+        </section>
+
+        <section class="hero">
+            <h1>GlyphEngine</h1>
+            <p class="tagline" data-i18n="home.tagline">Shader-style ASCII art for the web, the terminal and the desktop.</p>
+            <p data-i18n="home.lead"></p>
+            <p class="actions">
+                <a class="button primary" href="./learn/" data-i18n="home.learn">Start learning</a>
+                <a class="button" href="./play/" data-i18n="home.play">Open the playground</a>
+                <a class="button" href="https://github.com/tomast1337/GlyphEngine">GitHub</a>
+            </p>
+        </section>
+
+        <section class="features">
+            <div>
+                <h2 data-i18n="home.f1.title"></h2>
+                <p data-i18n="home.f1"></p>
+            </div>
+            <div>
+                <h2 data-i18n="home.f2.title"></h2>
+                <p data-i18n="home.f2"></p>
+            </div>
+            <div>
+                <h2 data-i18n="home.f3.title"></h2>
+                <p data-i18n="home.f3"></p>
+            </div>
+        </section>
+
+        <section>
+            <h2 data-i18n="home.install"></h2>
+            <pre><code>npm install @glyph-engine/web</code></pre>
+            <p data-i18n="home.installText"></p>
+            <h2 data-i18n="home.code"></h2>
+            <pre><code>import { run } from '@glyph-engine/web';
+
+run({
+    main(coord, context, cursor, out) {
+        const v = Math.sin(coord.x * 0.1 + context.time * 0.001);
+        out.char = v &gt; 0 ? '#' : '.';
+    },
+});</code></pre>
+        </section>
     </main>
     <footer>
-        <pre id="errors" role="alert"></pre>
-        <p id="hint" data-i18n="hint"></p>
+        <span data-i18n="home.credit"></span>
+        <a href="https://github.com/ertdfgcvb/play.core">play.core</a> ·
+        <a href="https://www.npmjs.com/org/glyph-engine">npm</a> ·
+        <a href="https://github.com/tomast1337/GlyphEngine/blob/main/LICENSE">Apache-2.0</a>
     </footer>
-    <script type="module" src="./playground.ts"></script>
+    <script type="module" src="./home.ts"></script>
 </body>
 </html>

@@ -1,11 +1,14 @@
 // Builds the playground into dist/, replacing what was there. --serve starts the server after.
 import {cp, rm} from "node:fs/promises";
+import {buildLearn} from "./learn";
 
 const outdir = "dist";
 await rm(outdir, {recursive: true, force: true});
 
+const pages = ["./src/index.html", "./src/play/index.html", ...await buildLearn()];
+
 const builds = await Promise.all([
-    Bun.build({entrypoints: ["./src/index.html"], outdir, minify: true, splitting: true}), // splitting: Sucrase loads on demand
+    Bun.build({entrypoints: pages, root: "src", outdir, minify: true, splitting: true}), // splitting: Sucrase and languages load on demand
     // One unhashed file: the runner's import map and user programs load the engine by this name
     Bun.build({entrypoints: [Bun.resolveSync("@glyph-engine/web", import.meta.dir)], outdir, naming: "engine.js", minify: true, target: "browser"}),
 ]);
