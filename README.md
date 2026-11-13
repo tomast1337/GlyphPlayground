@@ -42,4 +42,6 @@ Interface text lives in `src/i18n/`. `en.ts` has every key; to add a language, c
 
 ## Hosting
 
-Any static host works, as long as it sends `Access-Control-Allow-Origin: *` for `engine.js`: the sandboxed iframe has an opaque origin, so its module loads are cross-origin. GitHub Pages and `server.ts` send it.
+Railway runs the `Dockerfile` (`bun run build`, then `bun server.ts`), with `/healthz` as its health check (`railway.json`). Pushing to `main` deploys, through `.github/workflows/railway.yml`; it needs the `RAILWAY_TOKEN` secret, a Railway project token.
+
+`server.ts` sends the security headers. Pages get a strict Content-Security-Policy; `runner.html` gets `sandbox allow-scripts`, so programs stay sandboxed even if it's framed without the attribute. Every response allows any origin, because the sandboxed runner loads `engine.js` cross-origin. Bun's hashed `chunk-*` files are cached for a year, everything else revalidates.

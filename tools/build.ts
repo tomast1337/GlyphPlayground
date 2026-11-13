@@ -34,4 +34,4 @@ for (const build of builds) {
 // The runner is copied as is: bundling it would pull in a second copy of the engine
 await cp("src/runner", outdir, {recursive: true});
 
-if (process.argv.includes("--serve")) await import("../server.ts");
+if (process.argv.includes("--serve")) (await import("../server.ts")).serve();
